@@ -79,7 +79,8 @@ class sigmoid(tensor):
         return result
     def _derivative(self, feed, input, target):
         # write down the derivative of sigmoid here
-        jacob = 1
+        jacob = _sigmoid(input.eval(feed)) * \
+                    (1 - _sigmoid(input.eval(feed)))
         # end of your writing
         return jacob * self.back(target, feed)
         
@@ -135,7 +136,7 @@ class product(tensor):
     def _eval(self, feed):
         # write down the evaluation of product here
         # you should modify the following line
-        result = self.input_list[0].eval(feed)
+        result = self.input_list[0].eval(feed) * self.input_list[1].eval(feed)
         # end of your writing
         return result
     def _derivative(self, feed, input, target):
@@ -282,7 +283,8 @@ def mse(x, y):
     tensor object, which is the mean squared error of x
     '''
     # put your composition model here
-    out = reduce_mean(x)
+    subtract_out = add(x, scale(y, -1))
+    out = mean_square_sum(subtract_out)
     # end of your writing
     return out
 

@@ -17,7 +17,7 @@ class RidgeRegression(Graph):
     """
     def __init__(self, alpha=1.0, learning_rate=0.05, epoch_num=100, batch_size='auto'):
         # modify self.skip = False to run the extra test for bonus question
-        self.skip = True
+        self.skip = False
         self.alpha = alpha
         super().__init__(learning_rate=learning_rate, epoch_num=epoch_num, batch_size=batch_size)
         pass
@@ -40,8 +40,10 @@ class RidgeRegression(Graph):
         b = lfdnn.tensor([1, output_dim], 'output_bias')
         self.weight['output_bias'] = b        
         # put your code here, you can adjust the following lines
-        self.output = operator.matmul(self.input, w)
-        self.loss = operator.reduce_mean(self.output)
+        h = self.input
+        h = operator.add(operator.matmul(h, w), b)
+        self.output = h
+        self.loss = operator.mse(h, self.label)
         # end of your modification
         # dummy acc
         self.accuracy = self.loss
