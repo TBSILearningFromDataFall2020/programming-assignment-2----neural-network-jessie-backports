@@ -40,8 +40,10 @@ class RidgeRegression(Graph):
         b = lfdnn.tensor([1, output_dim], 'output_bias')
         self.weight['output_bias'] = b        
         # put your code here, you can adjust the following lines
-        self.output = operator.matmul(self.input, w)
-        self.loss = operator.reduce_mean(self.output)
+        h = self.input
+        h = operator.add(operator.matmul(h, w), b)
+        self.output = h
+        self.loss = operator.mse(h, self.label)
         # end of your modification
         # dummy acc
         self.accuracy = self.loss
